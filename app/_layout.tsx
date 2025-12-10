@@ -14,7 +14,7 @@ export const unstable_settings = {
 };
 
 function RootContent() {
-  const { user, loading, logout } = useAuth();
+  const { user, loading } = useAuth();
 
   if (loading) {
     return (
@@ -31,8 +31,7 @@ function RootContent() {
   return (
     <ChatProvider>
       <Stack>
-        <Stack.Screen name="chat" options={{ headerShown: false }} />
-        <Stack.Screen name="profile" options={{ headerShown: false }} />
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       </Stack>
     </ChatProvider>
   );

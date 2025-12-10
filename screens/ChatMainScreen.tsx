@@ -3,9 +3,11 @@ import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { ChatDetailScreen } from './ChatDetailScreen';
 import { ChatListScreen } from './ChatListScreen';
+import { NewChatScreen } from './NewChatScreen';
 
 export const ChatMainScreen: React.FC = () => {
   const [selectedChat, setSelectedChat] = useState<Chat | null>(null);
+  const [showNewChat, setShowNewChat] = useState(false);
 
   if (selectedChat) {
     return (
@@ -16,9 +18,23 @@ export const ChatMainScreen: React.FC = () => {
     );
   }
 
+  if (showNewChat) {
+    return (
+      <NewChatScreen
+        onChatCreated={() => {
+          setShowNewChat(false);
+        }}
+        onClose={() => setShowNewChat(false)}
+      />
+    );
+  }
+
   return (
     <View style={styles.container}>
-      <ChatListScreen onSelectChat={setSelectedChat} />
+      <ChatListScreen 
+        onSelectChat={setSelectedChat}
+        onNewChatPress={() => setShowNewChat(true)}
+      />
     </View>
   );
 };

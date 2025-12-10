@@ -13,12 +13,14 @@ import {
     TouchableOpacity,
     View,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 interface ChatListScreenProps {
   onSelectChat: (chat: Chat) => void;
+  onNewChatPress: () => void;
 }
 
-export const ChatListScreen: React.FC<ChatListScreenProps> = ({ onSelectChat }) => {
+export const ChatListScreen: React.FC<ChatListScreenProps> = ({ onSelectChat, onNewChatPress }) => {
   const { chats, loading, error } = useChat();
   const { user } = useAuth();
   const colorScheme = useColorScheme();
@@ -27,6 +29,36 @@ export const ChatListScreen: React.FC<ChatListScreenProps> = ({ onSelectChat }) 
   const handleChatPress = (chat: Chat) => {
     onSelectChat(chat);
   };
+
+  const renderHeader = () => (
+    <View
+      style={[
+        styles.header,
+        {
+          backgroundColor: isDarkMode ? Colors.dark.background : Colors.light.background,
+          borderBottomColor: isDarkMode ? Colors.dark.tabIconDefault : '#e0e0e0',
+        },
+      ]}
+    >
+      <Text
+        style={[
+          styles.headerTitle,
+          { color: isDarkMode ? Colors.dark.text : Colors.light.text },
+        ]}
+      >
+        Chats
+      </Text>
+      <TouchableOpacity
+        style={[
+          styles.newChatButton,
+          { backgroundColor: isDarkMode ? Colors.dark.tint : Colors.light.tint },
+        ]}
+        onPress={onNewChatPress}
+      >
+        <Text style={styles.newChatButtonText}>+</Text>
+      </TouchableOpacity>
+    </View>
+  );
 
   const handleDeleteChat = (chatId: string) => {
     Alert.alert('Delete Chat', 'Are you sure you want to delete this chat?', [
@@ -125,12 +157,13 @@ export const ChatListScreen: React.FC<ChatListScreenProps> = ({ onSelectChat }) 
   }
 
   return (
-    <View
+    <SafeAreaView
       style={[
         styles.container,
         { backgroundColor: isDarkMode ? Colors.dark.background : Colors.light.background },
       ]}
     >
+      {renderHeader()}
       {chats.length === 0 ? (
         <View style={styles.emptyContainer}>
           <Text
@@ -147,7 +180,7 @@ export const ChatListScreen: React.FC<ChatListScreenProps> = ({ onSelectChat }) 
               { color: isDarkMode ? Colors.dark.tabIconDefault : Colors.light.tabIconDefault },
             ]}
           >
-            Start a new conversation to begin messaging
+            Tap + to start a new conversation
           </Text>
         </View>
       ) : (
@@ -158,13 +191,37 @@ export const ChatListScreen: React.FC<ChatListScreenProps> = ({ onSelectChat }) 
           scrollEnabled={true}
         />
       )}
-    </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+  },
+  headerTitle: {
+    fontSize: 28,
+    fontWeight: '700',
+  },
+  newChatButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  newChatButtonText: {
+    color: '#fff',
+    fontSize: 24,
+    fontWeight: '600',
   },
   centerContainer: {
     flex: 1,

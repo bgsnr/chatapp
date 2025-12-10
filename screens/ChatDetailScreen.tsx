@@ -16,6 +16,7 @@ import {
     TouchableOpacity,
     View
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 interface ChatDetailScreenProps {
   chatId: string;
@@ -125,14 +126,20 @@ export const ChatDetailScreen: React.FC<ChatDetailScreenProps> = ({ chatId, onBa
   }
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+    <SafeAreaView
       style={[
-        styles.container,
+        styles.safeContainer,
         { backgroundColor: isDarkMode ? Colors.dark.background : Colors.light.background },
       ]}
-      keyboardVerticalOffset={Platform.OS === 'ios' ? 60 : 0}
     >
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={[
+          styles.container,
+          { backgroundColor: isDarkMode ? Colors.dark.background : Colors.light.background },
+        ]}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 60 : 0}
+      >
       <View style={styles.header}>
         <TouchableOpacity onPress={onBack}>
           <Ionicons
@@ -225,11 +232,15 @@ export const ChatDetailScreen: React.FC<ChatDetailScreenProps> = ({ chatId, onBa
           )}
         </TouchableOpacity>
       </View>
-    </KeyboardAvoidingView>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  safeContainer: {
+    flex: 1,
+  },
   container: {
     flex: 1,
   },

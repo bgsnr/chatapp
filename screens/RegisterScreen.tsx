@@ -5,6 +5,7 @@ import { useAuth } from '@/context/AuthContext';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import React, { useState } from 'react';
 import { Alert, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 interface RegisterScreenProps {
   onNavigateToLogin: () => void;
@@ -66,13 +67,19 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({ onNavigateToLogi
   };
 
   return (
-    <ScrollView
+    <SafeAreaView
       style={[
-        styles.container,
+        styles.safeContainer,
         { backgroundColor: isDarkMode ? Colors.dark.background : Colors.light.background },
       ]}
-      contentContainerStyle={styles.contentContainer}
     >
+      <ScrollView
+        style={[
+          styles.container,
+          { backgroundColor: isDarkMode ? Colors.dark.background : Colors.light.background },
+        ]}
+        contentContainerStyle={styles.contentContainer}
+      >
       <View style={styles.header}>
         <Text
           style={[
@@ -153,10 +160,14 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({ onNavigateToLogi
         </View>
       </View>
     </ScrollView>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  safeContainer: {
+    flex: 1,
+  },
   container: {
     flex: 1,
   },

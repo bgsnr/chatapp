@@ -14,8 +14,9 @@ import {
     Text,
     TextInput,
     TouchableOpacity,
-    View,
+    View
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 interface NewChatScreenProps {
   onChatCreated: (chatId: string) => void;
@@ -133,7 +134,7 @@ export const NewChatScreen: React.FC<NewChatScreenProps> = ({ onChatCreated, onC
   );
 
   return (
-    <View
+    <SafeAreaView
       style={[
         styles.container,
         { backgroundColor: isDarkMode ? Colors.dark.background : Colors.light.background },
@@ -217,7 +218,7 @@ export const NewChatScreen: React.FC<NewChatScreenProps> = ({ onChatCreated, onC
           scrollEnabled={true}
         />
       )}
-    </View>
+    </SafeAreaView>
   );
 };
 

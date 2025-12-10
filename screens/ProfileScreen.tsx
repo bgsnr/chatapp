@@ -12,6 +12,7 @@ import {
     Text,
     View
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 interface ProfileScreenProps {
   onLogout: () => void;
@@ -65,13 +66,19 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({ onLogout }) => {
   };
 
   return (
-    <ScrollView
+    <SafeAreaView
       style={[
-        styles.container,
+        styles.safeContainer,
         { backgroundColor: isDarkMode ? Colors.dark.background : Colors.light.background },
       ]}
-      contentContainerStyle={styles.contentContainer}
     >
+      <ScrollView
+        style={[
+          styles.container,
+          { backgroundColor: isDarkMode ? Colors.dark.background : Colors.light.background },
+        ]}
+        contentContainerStyle={styles.contentContainer}
+      >
       <View style={styles.header}>
         <View
           style={[
@@ -156,10 +163,14 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({ onLogout }) => {
         />
       </View>
     </ScrollView>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  safeContainer: {
+    flex: 1,
+  },
   container: {
     flex: 1,
   },
