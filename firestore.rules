@@ -1,0 +1,41 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return request.auth.uid == userId;
+    }
+
+    function isParticipant(chatId) {
+      return request.auth.uid in get(/databases/$(database)/documents/chats/$(chatId)).data.participants;
+    }
+
+    // Users collection - allows users to read all users (for search) and write their own
+    match /users/{userId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated() && userId == request.auth.uid;
+      allow update: if isOwner(userId);
+      allow delete: if isOwner(userId);
+    }
+
+    // Chats collection - allows reading if participant, creating new chats
+    match /chats/{chatId} {
+      allow read: if isAuthenticated() && isParticipant(chatId);
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated() && isParticipant(chatId);
+      allow delete: if isAuthenticated() && isParticipant(chatId);
+
+      // Messages subcollection - allows reading if participant, sending new messages
+      match /messages/{messageId} {
+        allow read: if isAuthenticated() && isParticipant(chatId);
+        allow create: if isAuthenticated() && request.auth.uid == request.resource.data.senderId;
+        allow update: if isAuthenticated() && request.auth.uid == resource.data.senderId;
+        allow delete: if isAuthenticated() && request.auth.uid == resource.data.senderId;
+      }
+    }
+  }
+}
